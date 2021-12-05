@@ -1,19 +1,26 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_practice/feature/dashboard/dashboard_screen.dart';
+import 'package:flutter_practice/inject.dart';
+import 'package:flutter_practice/util/constants.dart';
 
-// User model
 // Get user by id (1)
 // Save user to state
 // Render Dashboard once user is set
-// Todo model
 // Get TODOs by user id
+// Use riverpods to save todo state and update todos
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  await injectDeps();
+
+  // HTTP client setup:
+  Dio(BaseOptions(baseUrl: apiUrl));
+
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
