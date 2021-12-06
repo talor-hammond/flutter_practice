@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_practice/inject.dart';
 import 'package:flutter_practice/models/user.dart';
 
 class UserService {
-  Future<User> getUser(num userId) async {
+  Future<User> get(num userId) async {
     try {
-      // TODO: Access Dio via getIt
-      var response = await Dio().get("/users", queryParameters: {"id": userId});
+      var response = await inject
+          .get<Dio>()
+          .get("/users", queryParameters: {"id": userId});
 
-      var user = User.fromJson(response.data);
-      print(user);
+      var user = User.fromJson(response.data[0]);
 
       return user;
     } catch (e) {
