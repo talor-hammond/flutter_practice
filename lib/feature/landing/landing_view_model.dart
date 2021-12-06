@@ -24,7 +24,7 @@ final landingModel =
 class LandingViewModel with ChangeNotifier, SafeNotifierMixin {
   AsyncValue<User> user = const AsyncValue.loading();
 
-  LandingViewModel(AutoDisposeChangeNotifierProviderRef<LandingViewModel> ref) {
+  LandingViewModel(Ref ref) {
     // Get state of userProvider and re-evaluated when user state is updated
     final user = ref.watch(userProvider);
 
