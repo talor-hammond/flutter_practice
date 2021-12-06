@@ -4,7 +4,7 @@ import 'package:flutter_practice/feature/landing/landing_screen.dart';
 import 'package:flutter_practice/inject.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Render Dashboard once user is set, routing
+// Redirect to  Dashboard once user is set, routing
 // Get TODOs by user id
 // Use riverpods to save todo state and update todos
 // Dashboard UI
@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() async {
   await injectDeps();
 
-  // Wrap app in ProviderScope for access to riverpod state:
   runApp(const ProviderScope(child: App()));
 }
 
@@ -27,7 +26,16 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LandingScreen(),
+      initialRoute: LandingScreen.route,
+      onGenerateRoute: (routeSettings) {
+        switch (routeSettings.name) {
+          case DashboardScreen.route:
+            return DashboardScreen.create(routeSettings);
+          case LandingScreen.route:
+          default:
+            return LandingScreen.create(routeSettings);
+        }
+      },
     );
   }
 }
