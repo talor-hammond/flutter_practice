@@ -13,22 +13,27 @@ final _userIdProvider = FutureProvider<int>((ref) async {
   return user.id;
 });
 
-final todosProvider = FutureProvider<List<Todo>>((ref) async {
+final sortedTodosProvider = FutureProvider<List<Todo>>((ref) async {
   final todoService = GetIt.I.get<TodoService>();
 
   final userId = await ref.watch(_userIdProvider.future);
 
-  final todos = await todoService.get(userId);
+  var todos = await todoService.get(userId);
+
+  todos.sort((a, b) {
+    if (a.completed) {
+      return 1;
+    }
+
+    return -1;
+  });
 
   return todos;
-
-  // this provider be updated to provide filtering + adding of todos?
 });
 
 final dashboardModel =
     ChangeNotifierProvider.autoDispose((ref) => DashboardViewModel(ref));
 
-// TODO: dashboardProvider which wraps the data we need up into one AsyncValue
 class DashboardViewModel with ChangeNotifier, SafeNotifierMixin {
   AsyncValue<User> user = const AsyncValue.loading();
   AsyncValue<List<Todo>> todos = const AsyncValue.loading();
@@ -38,7 +43,7 @@ class DashboardViewModel with ChangeNotifier, SafeNotifierMixin {
 
   DashboardViewModel(Ref ref) {
     final user = ref.watch(userProvider.select((user) => user));
-    final todos = ref.watch(todosProvider);
+    final todos = ref.watch(sortedTodosProvider);
 
     this.user = user;
     this.todos = todos;
