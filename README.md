@@ -2,6 +2,13 @@
 
 A new Flutter project.
 
+## Todos
+
+- [] Add todo via reactive forms and todosProvider
+- [] Complete todo w todosProvider
+- [] Animated list of todos
+- [] Add a second dashboard using todosProvider and see how it acts (w/ .autoDispose and maintainState)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
