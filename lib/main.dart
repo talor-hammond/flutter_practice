@@ -10,6 +10,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Dashboard UI
 // Add todo w form -> update state -> dashboard update
 
+// GET todos - from api
+// Add todo - client
+// Update (complete) todo - client
+
 void main() async {
   await injectDeps();
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_practice/feature/dashboard/dashboard_screen.dart';
-import 'package:flutter_practice/feature/landing/landing_view_model.dart';
+import 'package:flutter_practice/service/user_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LandingScreen extends ConsumerWidget {
+class LandingScreen extends ConsumerStatefulWidget {
+  const LandingScreen({Key? key}) : super(key: key);
+
   static const route = "/landing";
 
   static PageRoute<void> create(RouteSettings routeSettings) {
@@ -13,24 +15,33 @@ class LandingScreen extends ConsumerWidget {
     });
   }
 
-  const LandingScreen({Key? key}) : super(key: key);
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends ConsumerState<LandingScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    _checkForUser();
+  }
+
+  Future<void> _checkForUser() async {
+    try {
+      final user = await ref.read(userProvider.future);
+
+      SchedulerBinding.instance?.addPostFrameCallback((_) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, DashboardScreen.route, (route) => route == null);
+      });
+    } catch (e) {
+      //
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(landingModel.select((value) => value.user));
-
-    return Scaffold(
-      body: user.when(
-          data: (user) {
-            // Redirect to Dashboard when user data is there
-            // This pattern should be driven by the the main/App but wanted to experiment w/ ChangeNotifierProvider in the landing view model
-            SchedulerBinding.instance?.addPostFrameCallback((_) {
-              Navigator.pushReplacementNamed(context, DashboardScreen.route);
-            });
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (Object error, StackTrace? stackTrace) =>
-              const Text("Couldn't retrieve user")),
-    );
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

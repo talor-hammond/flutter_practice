@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_practice/feature/dashboard/dashboard_view_model.dart';
 import 'package:flutter_practice/models/todo.dart';
+import 'package:flutter_practice/service/todo_service.dart';
+import 'package:flutter_practice/service/user_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -16,10 +17,8 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = ref.watch(dashboardModel);
-
-    var userName = dashboard.user.value?.username;
-    var todos = dashboard.todos.value;
+    var user = ref.watch(userProvider).value!;
+    var todos = ref.watch(todosProvider);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -33,22 +32,14 @@ class DashboardScreen extends ConsumerWidget {
           IconButton(onPressed: () {}, icon: const Icon(Icons.alarm))
         ],
       ),
-      body: Builder(builder: (context) {
-        if (dashboard.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (dashboard.isError) {
-          return const Center(child: Text("Oops"));
-        }
-
+      body: todos.when(data: (data) {
         return SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Welcome, $userName",
+                "Welcome, ${user.name}",
                 style:
                     const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
               ),
@@ -61,9 +52,15 @@ class DashboardScreen extends ConsumerWidget {
                     letterSpacing: 1,
                     fontWeight: FontWeight.w500),
               ),
-              _TodoList(todos: todos!)
+              _TodoList(todos: data)
             ],
           ),
+        );
+      }, loading: () {
+        return const Center(child: CircularProgressIndicator());
+      }, error: (e, st) {
+        return const Center(
+          child: CircularProgressIndicator(),
         );
       }),
     );
