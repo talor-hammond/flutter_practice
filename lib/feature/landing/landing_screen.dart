@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class LandingScreen extends ConsumerStatefulWidget {
   const LandingScreen({Key? key}) : super(key: key);
 
-  static const route = "/landing";
+  static const route = "landing";
 
   static PageRoute<void> create(RouteSettings routeSettings) {
     return MaterialPageRoute(builder: (context) {

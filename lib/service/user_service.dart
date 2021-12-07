@@ -18,14 +18,11 @@ class UserService {
   }
 }
 
-final userProvider = FutureProvider.autoDispose<User>((ref) async {
+final userProvider = FutureProvider<User>((ref) async {
   final userService = inject.get<UserService>();
 
   // hardcoded userId of 1
   final user = await userService.get(1);
-
-  // assume we've got a user
-  ref.maintainState = true;
 
   return user;
 });
