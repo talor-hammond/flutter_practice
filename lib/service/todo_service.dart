@@ -19,7 +19,6 @@ class TodoService {
   }
 }
 
-// get, addd, update todos
 final getTodosProvider = FutureProvider.autoDispose<List<Todo>>((ref) async {
   final todoService = GetIt.I.get<TodoService>();
 
