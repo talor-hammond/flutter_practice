@@ -1,5 +1,5 @@
 import 'package:flutter_practice/models/user.dart';
-import 'package:flutter_practice/util/api.dart';
+import 'package:flutter_practice/util/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../inject.dart';

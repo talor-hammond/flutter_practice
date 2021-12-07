@@ -1,6 +1,6 @@
 import 'package:flutter_practice/models/todo.dart';
 import 'package:flutter_practice/service/user_service.dart';
-import 'package:flutter_practice/util/api.dart';
+import 'package:flutter_practice/util/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 
