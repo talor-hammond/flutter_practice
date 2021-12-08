@@ -24,11 +24,15 @@ class AddTodoViewModel extends ChangeNotifier {
     formGroup = ref.read(formGroupProvider);
   }
 
+  bool isSubmitting = false;
+
   final ChangeNotifierProviderRef ref;
   late FormGroup formGroup;
 
-// TODO: simulate network request with future here and loading state
-  void submit() {
+  Future<void> submit() {
+    isSubmitting = true;
+    notifyListeners();
+
     final userId =
         ref.watch(userProvider.select((value) => value.asData?.value.id))!;
     final todosNotifier = ref.read(todosProvider.notifier);
@@ -42,10 +46,11 @@ class AddTodoViewModel extends ChangeNotifier {
         id: rng.nextInt(10000),
         title: todoTitle);
 
-    print(newTodo.toJson());
-
-    todosNotifier.add(newTodo);
-
-    // redirect or dispatch an event so the UI knows to redirect(?)
+    return Future.delayed(const Duration(seconds: 2), () {
+      todosNotifier.add(newTodo);
+    }).then((value) {
+      isSubmitting = false;
+      notifyListeners();
+    });
   }
 }
