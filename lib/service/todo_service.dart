@@ -19,7 +19,7 @@ class TodoService {
   }
 }
 
-final getTodosProvider = FutureProvider.autoDispose<List<Todo>>((ref) async {
+final getTodosProvider = FutureProvider<List<Todo>>((ref) async {
   final todoService = GetIt.I.get<TodoService>();
 
   final user = ref.watch(userProvider);
@@ -62,12 +62,12 @@ class TodosNotifier extends StateNotifier<AsyncValue<List<Todo>>> {
     });
   }
 
-  void complete(int id) {
+  void toggleCompletion(int id) {
     state.whenData((todos) {
       state = AsyncValue.data(todos.map((t) {
         if (t.id == id) {
           return Todo(
-            completed: true,
+            completed: !t.completed,
             id: t.id,
             title: t.title,
             userId: t.userId,
