@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_practice/feature/add-todo/add_todo_screen.dart';
 import 'package:flutter_practice/models/todo.dart';
 import 'package:flutter_practice/service/todo_service.dart';
 import 'package:flutter_practice/service/user_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardScreen extends ConsumerWidget {
+  const DashboardScreen({Key? key}) : super(key: key);
+
   static const route = "/";
 
   static PageRoute<void> create(RouteSettings routeSettings) {
@@ -13,14 +16,18 @@ class DashboardScreen extends ConsumerWidget {
     });
   }
 
-  const DashboardScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var user = ref.watch(userProvider).value!;
     var todos = ref.watch(todosProvider);
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, AddTodoScreen.route);
+        },
+        child: const Icon(Icons.navigation),
+      ),
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -92,13 +99,13 @@ class _TodoList extends StatelessWidget {
   }
 }
 
-class _TodoItem extends StatelessWidget {
+class _TodoItem extends ConsumerWidget {
   const _TodoItem({Key? key, required this.todo}) : super(key: key);
 
   final Todo todo;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: const BoxDecoration(
@@ -109,6 +116,9 @@ class _TodoItem extends StatelessWidget {
             value: todo.completed,
             onChanged: (value) {
               // Update riverpod store
+              var todosNotifier = ref.read(todosProvider.notifier);
+
+              todosNotifier.toggleCompletion(todo.id);
             },
           ),
           Flexible(
